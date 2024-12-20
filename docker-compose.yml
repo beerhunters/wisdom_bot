@@ -1,25 +1,13 @@
-version: '3.8'
-x-environment-defaults: &environment-defaults
-  DEBUG: "False"
-  DB_NAME: "wisdom"
-  DB_USER: "wisdom"
-  DB_PASSWORD: "wisdom"
-  DB_HOST: "wisdom-db"
-  DB_PORT: 6432
-
-
 services:
   wisdom-db:
     image: postgres:latest
     container_name: postgres
     environment:
-      <<: *environment-defaults
-#    environment:
-#      POSTGRES_DB: wisdom
-#      POSTGRES_USER: wisdom
-#      POSTGRES_PASSWORD: wisdom
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "6432:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:

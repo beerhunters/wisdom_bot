@@ -2,10 +2,12 @@ import aiohttp
 from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart
+from aiogram.enums import ParseMode
 from bs4 import BeautifulSoup
 import ssl
 from tg_bot.keyboards.basic import keyboard
 from tg_bot.logger import logger
+from tg_bot.utils import escape_markdown
 
 # URL для получения мудрости
 WISDOM_URL = "https://randstuff.ru/saying/"
@@ -59,7 +61,10 @@ async def wisdom_handler(message: Message):
         else:
             wisdom = "Не удалось найти мудрость на странице."
 
-        await message.answer(wisdom)
+        # Экранирование текста
+        escaped_text = await escape_markdown(wisdom)
+
+        await message.answer(f"||{escaped_text}||", parse_mode=ParseMode.MARKDOWN_V2)
 
     except aiohttp.ClientError as e:
         logger.error(f"Ошибка при запросе к {WISDOM_URL}: {e}")

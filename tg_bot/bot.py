@@ -3,6 +3,9 @@ import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommand
+
+# from aiogram.client.default import DefaultBotProperties
+# from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
 from tg_bot.logger import logger
@@ -14,7 +17,10 @@ from handlers import user
 async def main():
     """Главная функция для запуска бота."""
     load_dotenv()
-    bot = Bot(token=os.getenv("BOT_TOKEN"))
+    bot = Bot(
+        token=os.getenv("BOT_TOKEN"),
+        # default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN_V2),
+    )
     dp = Dispatcher()
 
     # Регистрация обработчиков
