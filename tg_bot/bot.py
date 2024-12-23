@@ -6,10 +6,9 @@ from aiogram.types import BotCommand
 
 from dotenv import load_dotenv
 
-from tg_bot.logger import logger
-
 
 from handlers import user
+from logger import logger
 
 
 async def main():

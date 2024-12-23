@@ -15,7 +15,7 @@ database = os.getenv("DB_DATABASE")
 port = os.getenv("DB_PORT")
 
 # Получение URL базы данных из переменных окружения
-DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}"
+DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@localhost:{port}/{database}"
 
 # Создание асинхронного движка
 engine = create_async_engine(

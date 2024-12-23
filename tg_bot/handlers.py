@@ -3,10 +3,10 @@ from aiogram.types import Message
 from aiogram.filters import CommandStart
 from aiogram.enums import ParseMode
 
-from tg_bot.database.requests import add_user
-from tg_bot.keyboards.basic import get_wisdom
-from tg_bot.logger import logger
-from tg_bot.utils import fetch_wisdom
+from database.requests import add_user
+from keyboards.basic import get_wisdom
+from logger import logger
+from utils import fetch_wisdom
 
 
 # Инициализация роутера
@@ -22,7 +22,7 @@ async def cmd_start(message: Message):
     try:
         await add_user(tg_id, username, full_name)
     except Exception as e:
-        logger.error(e)
+        logger.error(f"Ошибка записи в БД: {e}")
     await message.answer(
         "Привет! Нажмите кнопку ниже, чтобы получить мудрость.",
         reply_markup=get_wisdom,

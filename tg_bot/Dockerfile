@@ -5,7 +5,9 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Копируем requirements.txt в контейнер
-COPY requirements.txt .
+#COPY requirements.txt .
+# Копируем requirements.txt из родительской директории
+COPY ../requirements.txt /app/
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
@@ -15,6 +17,8 @@ COPY . /app/
 
 # Переменная окружения для отключения буферизации вывода
 ENV PYTHONUNBUFFERED=1
+# Добавляем директорию tg_bot в PYTHONPATH
+ENV PYTHONPATH=/app/tg_bot:$PYTHONPATH
 
 # Указываем команду запуска приложения
-CMD ["python", "bot.py"]
+CMD ["python", "/app/tg_bot/bot.py"]
