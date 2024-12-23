@@ -1,7 +1,7 @@
 services:
   wisdom-db:
     image: postgres:latest
-    container_name: postgres
+    container_name: wisdom-db
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
@@ -12,6 +12,23 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - wisdom-network
+  tg_bot:
+    build:
+      context: .  # Контекст сборки должен быть в корне проекта, а не внутри tg_bot
+      dockerfile: tg_bot/Dockerfile
+    container_name: tg-bot
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+    depends_on:
+      - wisdom-db  # Ожидание, пока база данных будет готова
+    networks:
+      - wisdom-network
+    restart: always  # Чтобы бот перезапускался, если что-то пойдет не так
 
 volumes:
   pg_data:

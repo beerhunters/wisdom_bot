@@ -6,17 +6,16 @@ from aiogram.types import BotCommand
 
 from dotenv import load_dotenv
 
-from tg_bot.logger import logger
-
 
 from handlers import user
+from logger import logger
 
 
 async def main():
     """Главная функция для запуска бота."""
     load_dotenv()
     bot = Bot(
-        token=os.getenv("BOT_TOKEN"),
+        token=os.getenv("TELEGRAM_TOKEN"),
     )
     dp = Dispatcher()
 
