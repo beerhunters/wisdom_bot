@@ -1,4 +1,3 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, func
 from sqlalchemy import (
     ForeignKey,
     String,

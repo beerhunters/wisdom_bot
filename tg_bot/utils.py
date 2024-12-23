@@ -6,10 +6,11 @@ from aiohttp import ClientSession
 
 from tg_bot.logger import logger
 
-
+# Ссылка на рандомный текст
 WISDOM_URL = "https://randstuff.ru/saying/"
 
 
+# Экранирование специальных символов
 async def escape_markdown(text: str) -> str:
     """Экранирует специальные символы для MarkdownV2."""
     # Перечень символов, которые нужно экранировать
@@ -18,6 +19,7 @@ async def escape_markdown(text: str) -> str:
     return escape_pattern.sub(r"\\\1", text)
 
 
+# Отключение проверки SSL
 async def get_ssl():
     # Создание глобального SSL контекста
     ssl_context = ssl.create_default_context()
@@ -26,6 +28,7 @@ async def get_ssl():
     return ssl_context
 
 
+# Получение случайной цитаты
 async def fetch_wisdom() -> str:
     """Получение мудрости с сайта."""
     try:

@@ -1,6 +1,7 @@
-from sqlalchemy import select, update
-from models import User
-from database import get_session, async_session
+from sqlalchemy import select
+
+from tg_bot.database.database import async_session
+from tg_bot.database.models import User
 
 
 def connection(some_func):
