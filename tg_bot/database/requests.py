@@ -27,19 +27,6 @@ async def add_user(session, tg_id, username, full_name):
         session.add(new_user)
         await session.commit()
         return new_user
-    # else:
-    #     # Если пользователь существует, обновляем его данные
-    #     await session.execute(
-    #         update(User)
-    #         .where(User.tg_id == tg_id)
-    #         .values(
-    #             tg_id=tg_id,
-    #             username=username,
-    #             full_name=full_name,
-    #         )
-    #     )
-    #     await session.commit()  # Коммитим обновление пользователя
-    #     return user  # Возвращаем обновленного пользователя
 
 
 @connection
