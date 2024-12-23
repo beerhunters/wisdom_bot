@@ -1,6 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-# from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import async_sessionmaker
 import os
 from dotenv import load_dotenv
@@ -11,11 +10,11 @@ load_dotenv()
 user = os.getenv("DB_USER")
 password = os.getenv("DB_PASSWORD")
 host = os.getenv("DB_HOST")
-database = os.getenv("DB_DATABASE")
+database = os.getenv("DB_NAME")
 port = os.getenv("DB_PORT")
 
 # Получение URL базы данных из переменных окружения
-DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@localhost:{port}/{database}"
+DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}"
 
 # Создание асинхронного движка
 engine = create_async_engine(

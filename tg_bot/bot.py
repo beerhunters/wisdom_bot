@@ -15,7 +15,7 @@ async def main():
     """Главная функция для запуска бота."""
     load_dotenv()
     bot = Bot(
-        token=os.getenv("BOT_TOKEN"),
+        token=os.getenv("TELEGRAM_TOKEN"),
     )
     dp = Dispatcher()
 
