@@ -5,7 +5,7 @@ from aiogram.filters import CommandStart
 from aiogram.enums import ParseMode
 from bs4 import BeautifulSoup
 import ssl
-from tg_bot.keyboards.basic import keyboard
+from tg_bot.keyboards.basic import get_wisdom
 from tg_bot.logger import logger
 from tg_bot.utils import escape_markdown
 
@@ -26,7 +26,7 @@ async def cmd_start(message: Message):
     """Обработчик команды /start."""
     await message.answer(
         "Привет! Нажмите кнопку ниже, чтобы получить мудрость.",
-        reply_markup=keyboard,
+        reply_markup=get_wisdom,
     )
 
 

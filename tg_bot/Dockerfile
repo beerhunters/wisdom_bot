@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем весь код приложения в контейнер
-COPY . .
+COPY . /app/
 
 # Переменная окружения для отключения буферизации вывода
 ENV PYTHONUNBUFFERED=1
