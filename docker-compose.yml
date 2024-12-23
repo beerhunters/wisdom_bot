@@ -12,6 +12,22 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - wisdom-network
+
+  alembic:
+    build:
+      context: .  # Контекст сборки для Alembic
+      dockerfile: alembic/Dockerfile  # Dockerfile для Alembic
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@wisdom-db:5432/${DB_NAME}
+    depends_on:
+      - wisdom-db  # Ожидание готовности базы данных
+    volumes:
+      - .:/app  # Привязка текущего каталога к рабочему каталогу контейнера Alembic
+    networks:
+      - wisdom-network
+    working_dir: /app
+#    entrypoint: ["alembic", "upgrade", "head"]
+
   tg_bot:
     build:
       context: .  # Контекст сборки должен быть в корне проекта, а не внутри tg_bot

@@ -42,6 +42,7 @@ class Wisdom(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.tg_id"))
     message: Mapped[str] = mapped_column(String(128), nullable=True)
+    author: Mapped[str] = mapped_column(String(128), nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
 
     # Связь с таблицей User

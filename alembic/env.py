@@ -13,7 +13,7 @@ fileConfig(config.config_file_name)
 target_metadata = Base.metadata
 
 # Синхронная строка подключения к базе данных
-DATABASE_URL = "postgresql://wisdom:wisdom@wisdom-db:6432/wisdom"
+DATABASE_URL = "postgresql://wisdom:wisdom@wisdom-db:5432/wisdom"
 
 
 def run_migrations_offline() -> None:
