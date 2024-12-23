@@ -26,7 +26,7 @@ services:
     networks:
       - wisdom-network
     working_dir: /app
-#    entrypoint: ["alembic", "upgrade", "head"]
+#    entrypoint: ["alembic"]
 
   tg_bot:
     build:

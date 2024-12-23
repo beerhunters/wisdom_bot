@@ -1,7 +1,7 @@
 from sqlalchemy import select, update
 
 from tg_bot.database.database import async_session
-from tg_bot.database.models import User
+from tg_bot.database.models import User, Wisdom
 
 
 def connection(some_func):
@@ -40,3 +40,24 @@ async def add_user(session, tg_id, username, full_name):
     #     )
     #     await session.commit()  # Коммитим обновление пользователя
     #     return user  # Возвращаем обновленного пользователя
+
+
+@connection
+async def add_wisdom(session, tg_id, wisdom, author):
+    # Проверяем, существует ли пользователь с таким tg_id
+    user = await session.scalar(select(User).where(User.tg_id == tg_id))
+
+    if not user:
+        # Если пользователь не существует, выбрасываем ошибку или можем вернуть None
+        raise ValueError(f"Пользователь с tg_id {tg_id} не найден")
+
+    # Если пользователь существует, создаем запись о мудрости
+    new_wisdom = Wisdom(
+        user_id=tg_id,  # Или user_id=user.tg_id, если связаны с объектом user
+        wisdom_text=wisdom,
+        author=author,
+    )
+
+    session.add(new_wisdom)
+    await session.commit()  # Подтверждаем изменения в БД
+    return new_wisdom  # Возвращаем созданную запись о мудрости
