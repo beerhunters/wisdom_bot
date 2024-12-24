@@ -51,11 +51,15 @@ async def fetch_wisdom(tg_id) -> str:
                 if quote_td
                 else "Не удалось получить цитату."
             )
-            author = author_span.text.strip() if author_span else "Автор неизвестен"
+            author = (
+                author_span.text.split("—")[1].strip()
+                if author_span
+                else "Автор неизвестен"
+            )
 
-            wisdom = f"{quote}\n\nАвтор: {author}"
+            wisdom = f"{quote}\n\nАвтор: — {author}"
 
-            await add_wisdom(tg_id, quote, author.split("—")[1])
+            await add_wisdom(tg_id, quote, author)
         else:
             wisdom = "Не удалось найти мудрость на странице."
 
