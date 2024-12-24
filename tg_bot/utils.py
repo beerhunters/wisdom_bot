@@ -4,6 +4,7 @@ import aiohttp
 from bs4 import BeautifulSoup
 from aiohttp import ClientSession
 
+from tg_bot.database.requests import add_wisdom
 from tg_bot.logger import logger
 
 # Ссылка на рандомный текст
@@ -29,7 +30,7 @@ async def get_ssl():
 
 
 # Получение случайной цитаты
-async def fetch_wisdom() -> str:
+async def fetch_wisdom(tg_id) -> str:
     """Получение мудрости с сайта."""
     try:
         async with ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
@@ -50,9 +51,15 @@ async def fetch_wisdom() -> str:
                 if quote_td
                 else "Не удалось получить цитату."
             )
-            author = author_span.text.strip() if author_span else "Автор неизвестен"
+            author = (
+                author_span.text.split("—")[1].strip()
+                if author_span
+                else "Автор неизвестен"
+            )
 
-            wisdom = f"{quote}\n\nАвтор: {author}"
+            wisdom = f"{quote}\n\nАвтор: — {author}"
+
+            await add_wisdom(tg_id, quote, author)
         else:
             wisdom = "Не удалось найти мудрость на странице."
 

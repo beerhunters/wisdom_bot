@@ -4,8 +4,6 @@ FROM python:3.12-slim
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем requirements.txt в контейнер
-#COPY requirements.txt .
 # Копируем requirements.txt из родительской директории
 COPY ../requirements.txt /app/
 

@@ -7,14 +7,7 @@ from dotenv import load_dotenv
 # Загрузка переменных окружения
 load_dotenv()
 
-user = os.getenv("DB_USER")
-password = os.getenv("DB_PASSWORD")
-host = os.getenv("DB_HOST")
-database = os.getenv("DB_NAME")
-port = os.getenv("DB_PORT")
-
-# Получение URL базы данных из переменных окружения
-DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Создание асинхронного движка
 engine = create_async_engine(

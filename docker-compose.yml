@@ -1,29 +1,63 @@
+x-environment-defaults: &environment-defaults
+#  DEBUG: "False"
+  DB_NAME: ${DB_NAME}
+  DB_USER: ${DB_USER}
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_HOST: ${DB_HOST}
+  DB_PORT: ${DB_PORT}
+  TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+  DATABASE_URL: ${DATABASE_URL}
+#  CELERY_BROKER_URL: "redis://redis:6379/0"
+#  CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+#  SECRET_KEY: "secret"
+
 services:
+
   wisdom-db:
     image: postgres:latest
     container_name: wisdom-db
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      <<: *environment-defaults
+#      - POSTGRES_DB=${DB_NAME}
+#      - POSTGRES_USER=${DB_USER}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "${DB_PORT}:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
       - wisdom-network
+
+  alembic:
+    build:
+      context: .  # Контекст сборки для Alembic
+      dockerfile: alembic/Dockerfile  # Dockerfile для Alembic
+    environment:
+#      - DATABASE_URL=postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@wisdom-db:5432/${DB_NAME}
+#      - DATABASE_URL=${DATABASE_URL}
+        <<: *environment-defaults
+    depends_on:
+      - wisdom-db  # Ожидание готовности базы данных
+    volumes:
+      - .:/app  # Привязка текущего каталога к рабочему каталогу контейнера Alembic
+    networks:
+      - wisdom-network
+    working_dir: /app
+#    entrypoint: ["alembic"]
+
   tg_bot:
     build:
       context: .  # Контекст сборки должен быть в корне проекта, а не внутри tg_bot
       dockerfile: tg_bot/Dockerfile
     container_name: tg-bot
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      <<: *environment-defaults
+#      - DB_HOST=${DB_HOST}
+#      - DB_PORT=${DB_PORT}
+#      - DB_USER=${DB_USER}
+#      - DB_PASSWORD=${DB_PASSWORD}
+#      - DB_NAME=${DB_NAME}
+#      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
     depends_on:
       - wisdom-db  # Ожидание, пока база данных будет готова
     networks:

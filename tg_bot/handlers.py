@@ -32,5 +32,5 @@ async def cmd_start(message: Message):
 @user.message(F.text == "Получить мудрость")
 async def wisdom_handler(message: Message):
     """Обработчик кнопки 'Получить мудрость'."""
-    wisdom = await fetch_wisdom()
+    wisdom = await fetch_wisdom(message.from_user.id)
     await message.answer(f"||{wisdom}||", parse_mode=ParseMode.MARKDOWN_V2)
