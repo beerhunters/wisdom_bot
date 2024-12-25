@@ -1,14 +1,15 @@
 # Используем базовый образ Python
-FROM python:3.12-slim
+FROM python:3.12.0-slim
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
 # Копируем requirements.txt из родительской директории
-COPY ../requirements.txt /app/
+COPY requirements.txt /app/
 
 # Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /root/.cache
 
 # Копируем весь код приложения в контейнер
 COPY . /app/
