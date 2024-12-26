@@ -69,7 +69,7 @@ async def fetch_wisdom(tg_id) -> str:
 
     except aiohttp.ClientError as e:
         logger.error(f"Ошибка при запросе к {WISDOM_URL}: {e}")
-        return "Не удалось получить мудрость. Попробуйте позже."
+        return "Не удалось получить мудрость"
     except Exception as e:
         logger.error(f"Неизвестная ошибка: {e}")
-        return "Произошла ошибка, попробуйте позже."
+        return "Произошла ошибка"

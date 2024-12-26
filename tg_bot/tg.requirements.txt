@@ -13,3 +13,4 @@ python-dotenv==1.0.1
 SQLAlchemy==2.0.36
 alembic==1.14.0
 yarl==1.18.3
+beautifulsoup4==4.12.3
