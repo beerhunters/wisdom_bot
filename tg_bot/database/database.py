@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-# DATABASE_URL = "postgresql+asyncpg://wisdom:wisdom@wisdom_db:5432/db"
 
 # Создание асинхронного движка
 engine = create_async_engine(
