@@ -1,6 +1,0 @@
-.env
-__pycache__/
-.git/
-*.pyc
-*.pyo
-.DS_Store

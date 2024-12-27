@@ -87,7 +87,7 @@
    docker exec -it <container_id_or_name> psql -U <username> -d <database_name>
    ```
 2. Получите список всех таблиц:  
-   ```sql
+   ```bash
    \dt
    ```
 
@@ -102,8 +102,78 @@
 
 ### 6. Django и NGinx
 
-1. Подключите Django для управления серверной частью.  
-2. Настройте NGinx для обработки статики.
+1. Создание проекта.  
+   ```bash
+   django-admin startproject admin_panel
+   cd admin_panel
+   ```
+2. Настройка подключение к БД
+   ```python
+   DATABASES = {
+       "default": {
+           "ENGINE": "django.db.backends.postgresql",
+           "NAME": "your_database_name",
+           "USER": "your_database_user",
+           "PASSWORD": "your_database_password",
+           "HOST": "localhost",  # Укажите хост вашего контейнера, если работаете с Docker
+           "PORT": "5432",
+       }
+   }
+   ```
+3. Создание Django приложения
+   ```bash
+    python manage.py startapp core
+   ```
+4. Зарегистрируйте приложение в admin_panel/settings.py в разделе INSTALLED_APPS
+   ```python
+    INSTALLED_APPS = [
+    # Другие стандартные приложения
+    "core",
+   ]
+   ```
+5. Создание моделей для Django
+   - Поднять контейнер с БД
+   ```bash
+    docker-compose up
+   ```
+   - Автогенерация моделей
+   ```bash
+    python manage.py inspectdb > core/models.py
+   ```
+6. Сохраните файл и создайте миграции
+   ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+   ```
+7. Откройте файл core/admin.py и зарегистрируйте модель.
+   ```python
+   from django.contrib import admin
+   from .models import Product
+   
+   @admin.register(Product)
+   class ProductAdmin(admin.ModelAdmin):
+       list_display = ("name", "price", "created_at")  # Поля, отображаемые в списке
+       search_fields = ("name", "description")  # Поля для поиска
+   ```
+8. Создайте суперпользователя для доступа к админке
+   ```bash
+    python manage.py createsuperuser
+   ```
+9. Запустите сервер разработки и откройте админ-панель, для проверки
+   ```bash
+    python manage.py runserver
+   ```
+10. В admin_panel/settings.py добавьте настройки для статики   
+   ```python
+    STATIC_URL = "/static/"
+    STATIC_ROOT = BASE_DIR / "static"
+   ```
+   ```bash
+    python manage.py collectstatic
+   ```
+11. Dockerfile + docker-compose.yml
+
+12. Настройте NGinx для обработки статики.
 
 ---
 
@@ -127,11 +197,11 @@
 
 ## Лицензия
 
-Проект распространяется под лицензией [MIT](LICENSE).
+Проект распространяется под лицензией [MIT](https://github.com/beerhunters/wisdom_bot/blob/main/LICENSE.md).
 
 ---
 
 ## Контакты
 
-- Telegram: [Ваш контакт](https://t.me/username)  
-- GitHub: [Ваш репозиторий](https://github.com/username/wisdom_bot)
+- Telegram: [Beerhunters](https://t.me/beerhunters)  
+- GitHub: [Beerhunters](https://github.com/beerhunters/wisdom_bot)
