@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+# from django.conf import settings
+# from django.conf.urls.static import static
 from dotenv.main import load_dotenv
 
 load_dotenv()
@@ -24,17 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = "django-insecure-ujo#vd*yb2@9=vi6s+q0_4+0e=(5_bcr9#)vy6mg!0i_30#5$-"
+# SECRET_KEY = "django-insecure-n5d(5k+w&(ggkt15bd_8#kqn@aaz&)*3xgx1ul)ok()z__3b)u"
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
-DEBUG = os.getenv("DEBUG")
+DEBUG = False
 
-# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ["*"]
-# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "172.18.0.1"]
-CORS_ALLOW_ALL_ORIGINS = True
+
 
 # Application definition
 
@@ -45,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "corsheaders",
     "core",
 ]
 
@@ -54,7 +52,6 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -84,21 +81,15 @@ WSGI_APPLICATION = "admin_panel.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "db"),
-        "USER": os.getenv("POSTGRES_USER", "wisdom"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "wisdom"),
-        "HOST": os.getenv("POSTGRES_HOST", "wisdom_db"),
-        # "PORT": os.getenv("POSTGRES_PORT", "5437"),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
         # "HOST": "localhost",
+        # "PORT": os.getenv("POSTGRES_PORT"),
+        "HOST": os.getenv("POSTGRES_HOST"),
         "PORT": 5432,
     }
 }
@@ -126,8 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-# LANGUAGE_CODE = "en-us"
-LANGUAGE_CODE = "ru-ru"
+LANGUAGE_CODE = "en-us"
 
 # TIME_ZONE = "UTC"
 TIME_ZONE = "Europe/Moscow"
@@ -142,26 +132,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
-}
