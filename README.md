@@ -1,207 +1,209 @@
 # Wisdom Bot
 
-**Wisdom Bot** — это Telegram-бот, отправляющий мудрости каждый день.  
-Проект использует PostgreSQL для хранения данных, Docker/Docker Compose для контейнеризации, SQLAlchemy и Alembic для работы с базой данных, а также NGinx для статики.
+**Wisdom Bot** is a Telegram bot that sends wisdom every day.  
+The project uses PostgreSQL for data storage, Docker/Docker Compose for containerization, SQLAlchemy and Alembic for database handling, and NGinx for static.
 
 ---
 
-## Стек технологий
+## Technology Stack
 
-- **Язык**: Python  
-- **База данных**: PostgreSQL  
+- **Language**: Python  
+- **Database**: PostgreSQL  
 - **ORM**: SQLAlchemy  
-- **Миграции**: Alembic  
-- **Контейнеризация**: Docker, Docker Compose  
-- **Фреймворк**: Django  
-- **Сервер статики**: NGinx  
+- **Migrations**: Alembic  
+- **Containerization**: Docker, Docker Compose  
+- **Framework**: Django  
+- **Static Server**: NGinx  
 
 ---
 
-## Установка и настройка
+### Installation and configuration
 
-### 1. Подготовка среды
+### 1. Prepare the environment
 
-- Установите [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install/).  
-- Установите PostgreSQL клиент (`psql`) для проверки базы данных.
+- Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).  
+- Install PostgreSQL client (`psql`) to test the database.
 
 ---
 
-### 2. Настройка проекта
+### 2. Configuring the project
 
-#### Создание `docker-compose.yml`
-Для поднятия контейнера с PostgreSQL выполните следующие шаги:  
-1. Очистите Docker-среду (опционально):  
+#### Create `docker-compose.yml`.
+Follow these steps to bring up the container with PostgreSQL:  
+1. clean up the Docker environment (optional):  
    ```bash
    docker system prune -a -f
    ```
-2. Укажите в `docker-compose.yml`:  
-   - Образ PostgreSQL.  
-   - Логин/пароль, имя базы данных, порт и имя хоста.  
-3. Поднимите контейнер:  
+2. Specify in ``docker-compose.yml``:  
+   - PostgreSQL image.  
+   - Login/password, database name, port, and hostname.  
+3. Bring up the container:  
    ```bash
    docker-compose up --build
    ```
-4. Проверьте подключение к базе данных:  
+4. Check the database connection:  
    ```bash
    psql -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}
    ```
 
-#### Создание Dockerfile для Telegram-бота
-Создайте `Dockerfile`, добавив рабочую директорию `/app`.
+#### Creating a Dockerfile for Telegram bot
+Create a `Dockerfile` by adding the working directory `/app`.
 
 ---
 
-### 3. Работа с базой данных
+### 3. Working with a database
 
-#### SQLAlchemy: создание модели
-- Настройте SQLAlchemy для взаимодействия с PostgreSQL.
+#### SQLAlchemy: creating a model
+- Configure SQLAlchemy to interact with PostgreSQL.
 
-#### Alembic: управление миграциями
-1. Инициализация Alembic:  
-   ```bash
+#### Alembic: Migration Management
+1. initialize Alembic:  
+   ```bash.
    alembic init alembic
    ```
-2. Настройте `alembic.ini`:  
+2. Customize ``alembic.ini``:  
    ```ini
    sqlalchemy.url = postgresql+psycopg2://<username>:<password>@localhost:<port>/<database>
    ```
-   Или добавьте URL в `.env`, чтобы избежать изменений в `alembic.ini`.
-3. Убедитесь, что подключение в `env.py` синхронное.
+   Or add the URL to `.env` to avoid changes to `alembic.ini`.
+3. Make sure the connection in `env.py` is synchronous.
 
-#### Создание и применение миграций
-1. Создайте миграцию:  
+#### Creating and applying migrations
+1. Create a migration:  
    ```bash
-   alembic revision --autogenerate -m "Create tables"
+   alembic revision --autogenerate -m “Create tables”
    ```
-2. Примените миграцию:  
-   ```bash
+2. Apply the migration:  
+   ````bash
    alembic upgrade head
    ```
 
 ---
 
-### 4. Управление контейнером PostgreSQL
+### 4. PostgreSQL container management
 
-1. Подключитесь к контейнеру:  
+1. Connect to the container:  
    ```bash
    docker exec -it <container_id_or_name> psql -U <username> -d <database_name>
    ```
-2. Получите список всех таблиц:  
+2. Get a list of all tables:  
    ```bash
-   \dt
+   \```bash
    ```
 
 ---
 
-### 5. Настройка портов
+### 5. Configuring Ports
 
-- Внутренний порт PostgreSQL: `5432`.  
-- Внешний порт для доступа: `5437`.
+- PostgreSQL internal port: `5432`.  
+- External access port: `5437`.
 
 ---
 
-### 6. Django и NGinx
+### 6. Django and NGinx
 
-1. Создание проекта.  
+1. Project creation.  
    ```bash
    django-admin startproject admin_panel
    cd admin_panel
    ```
-2. Настройка подключение к БД
+2. Configuring the connection to the database
    ```python
    DATABASES = {
-       "default": {
-           "ENGINE": "django.db.backends.postgresql",
-           "NAME": "your_database_name",
-           "USER": "your_database_user",
-           "PASSWORD": "your_database_password",
-           "HOST": "localhost",  # Укажите хост вашего контейнера, если работаете с Docker
-           "PORT": "5432",
+       { “default”: {
+           “ENGINE": ‘django.db.backends.postgresql’,
+           “NAME": ‘your_database_name’,
+           “USER": ‘your_database_user’,
+           “PASSWORD": ‘your_database_password’,
+           “HOST": ‘localhost’, # Specify the host of your container if you're working with Docker.
+           “PORT": ”5432”
        }
    }
    ```
-3. Создание Django приложения
+3. Creating a Django application
    ```bash
     python manage.py startapp core
    ```
-4. Зарегистрируйте приложение в admin_panel/settings.py в разделе INSTALLED_APPS
+4. Register the application in admin_panel/settings.py under INSTALLED_APPS
    ```python
     INSTALLED_APPS = [
-    # Другие стандартные приложения
-    "core",
+    # Other standard applications
+    { “core”,
    ]
    ```
-5. Создание моделей для Django
-   - Поднять контейнер с БД
+5. Creating models for Django
+   - Bring up the container with the database
    ```bash
     docker-compose up
    ```
-   - Автогенерация моделей
+   - Autogenerate models
    ```bash
     python manage.py inspectdb > core/models.py
    ```
-6. Сохраните файл и создайте миграции
+6. Save the file and create migrations
    ```bash
     python manage.py makemigrations
     python manage.py migrate
    ```
-7. Откройте файл core/admin.py и зарегистрируйте модель.
+7. Open the core/admin.py file and register the model.
    ```python
    from django.contrib import admin
    from .models import Product
    
    @admin.register(Product)
-   class ProductAdmin(admin.ModelAdmin):
-       list_display = ("name", "price", "created_at")  # Поля, отображаемые в списке
-       search_fields = ("name", "description")  # Поля для поиска
+   Class ProductAdmin(admin.ModelAdmin):
+       list_display = (“name”, “price”, “created_at”) # Fields displayed in the list
+       search_fields = (“name”, “description”) # Fields to search for
    ```
-8. Создайте суперпользователя для доступа к админке
+8. Create a superuser to access the admin area
    ```bash
     python manage.py createsuperuser
    ```
-9. Запустите сервер разработки и откройте админ-панель, для проверки
+9. Start the development server and open the admin panel, for testing purposes
    ```bash
     python manage.py runserver
    ```
-10. В admin_panel/settings.py добавьте настройки для статики   
+10. In admin_panel/settings.py, add settings for static   
    ```python
-    STATIC_URL = "/static/"
-    STATIC_ROOT = BASE_DIR / "static"
+    STATIC_URL = “/static/”
+    STATIC_ROOT = BASE_DIR / “static”
    ```
    ```bash
     python manage.py collectstatic
    ```
-11. Dockerfile + docker-compose.yml
+11. dockerfile + docker-compose.yml
 
-12. Настройте NGinx для обработки статики.
+12. configure NGinx to handle static.
 
 ---
 
-## Команды для запуска
+## Commands to run
 
-1. **Сборка и запуск контейнеров:**  
+1. **Build and start containers:**  
    ```bash
    docker-compose up --build
    ```
-2. **Создание таблиц и миграции:**  
+2. **Create tables and migrations:** ````  
    ```bash
-   alembic revision --autogenerate -m "Create tables"
+   alembic revision --autogenerate -m “Create tables”
    alembic upgrade head
    ```
-3. **Проверка базы данных:**  
+3. **Check database:**  
    ```bash
    psql -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}
    ```
 
 ---
 
-## Лицензия
+## License
 
-Проект распространяется под лицензией [MIT](https://github.com/beerhunters/wisdom_bot/blob/main/LICENSE.md).
+The project is distributed under the [MIT](https://github.com/beerhunters/wisdom_bot/blob/main/LICENSE.md) license.
 
 ---
 
-## Контакты
+## Contact
 
 - Telegram: [Beerhunters](https://t.me/beerhunters)  
 - GitHub: [Beerhunters](https://github.com/beerhunters/wisdom_bot)
+
+Translated with www.DeepL.com/Translator (free version)
