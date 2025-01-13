@@ -74,7 +74,7 @@ Create a `Dockerfile` by adding the working directory `/app`.
    alembic revision --autogenerate -m “Create tables”
    ```
 2. Apply the migration:  
-   ````bash
+   ```bash
    alembic upgrade head
    ```
 
