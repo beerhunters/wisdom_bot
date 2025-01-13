@@ -88,7 +88,7 @@ Create a `Dockerfile` by adding the working directory `/app`.
    ```
 2. Get a list of all tables:  
    ```bash
-   \```bash
+   \dt
    ```
 
 ---
